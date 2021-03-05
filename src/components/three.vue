@@ -28,7 +28,7 @@ export default {
       //  创建场景对象Scene
       this.scene = new THREE.Scene();
       this.fbxLoader = new FBXLoader();
-
+      var axes = new THREE.AxisHelper(100);
       //网格模型添加到场景中
       //   let geometry = new THREE.BoxGeometry(40, 20, 20);
       let material = new THREE.MeshBasicMaterial({
@@ -38,18 +38,22 @@ export default {
       //   this.scene.add(this.mesh);
 
       this.fbxLoader.load("/static/QTZSB.FBX", (object) => {
-        object.translateY(-10);
-        object.rotateY(10);
+        // object.translateY(-10);
+        // object.rotateY(10);
+        object.position.set(0, 0, 0);
         object.scale.multiplyScalar(0.25);
         console.log(object.children);
 
         this._ChangeMaterialEmissive(object);
+        this.scene.add(axes);
+
         this.scene.add(object);
-        setTimeout(() => {
-          console.log("删除组件");
-          // object.children[1].rotateZ(Math.PI);
+        setInterval(() => {
+        //   console.log("删除组件");
+          object.rotateY(Math.PI / 8);
+        //   object.children[1].rotateY(Math.PI / 8);
           //   object.remove(object.children[0]);
-          console.log(object.children);
+          console.log(object.children[1].rotation);
         }, 1000);
         var mesh = new THREE.Mesh(object.children[0].geometry, material);
         mesh.scale.set(0.5, 0.5, 0.5);
@@ -61,9 +65,6 @@ export default {
         //   var mesh = new THREE.Mesh(item.geometry, material);
         //   this.scene.add(mesh);
         // });
-        var light = new THREE.DirectionalLight(0xffffff);
-        light.position.set(0, 0, 50).normalize();
-        this.scene.add(light);
       });
       /**
        * 相机设置
@@ -76,8 +77,8 @@ export default {
         0.01,
         1000
       );
-      this.camera.position.set(0, 0, 50);
-      this.camera.lookAt(this.scene.position);
+      this.camera.position.set(20, 50, 60);
+      //   this.camera.lookAt(this.scene.position);
       /**
        * 创建渲染器对象
        */
