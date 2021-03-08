@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <model-fbx backgroundColor="pink" :position="{ x: 0, y: 0, z: 0 }" src="static/QTZSB.FBX">
+    <model-fbx backgroundColor="pink" @on-load="loadSuccess()" :position="{ x: 0, y: 0, z: 0 }" src="static/QTZSB.FBX">
       <!-- <model-fbx src="static/dancing.fbx"></model-fbx> -->
     </model-fbx>
   </div>
@@ -18,6 +18,11 @@ export default {
       msg: "Welcome to Your Vue.js App",
     };
   },
+  methods:{
+    loadSuccess(event){
+      console.log(event)
+    }
+  }
 };
 </script>
 
