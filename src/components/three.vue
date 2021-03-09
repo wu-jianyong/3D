@@ -15,6 +15,8 @@ export default {
       scene: null,
       renderer: null,
       mesh: null,
+      angle: 0,
+      object: null,
     };
   },
   mounted() {
@@ -30,31 +32,35 @@ export default {
       this.fbxLoader = new FBXLoader();
       var axes = new THREE.AxisHelper(100);
       //网格模型添加到场景中
-      // let geometry = new THREE.BoxGeometry(10, 11, 11);
+      let geometry = new THREE.BoxGeometry(10, 11, 11);
+      var material1 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
       var material = new THREE.MeshLambertMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide,
-      }); //创建材质
-      // var mesh = new THREE.Mesh(geometry, material);
+      });
+      this.mesh = new THREE.Mesh(geometry, material1);
+      // this.scene.add(this.mesh);
       //添加光线
       var light = new THREE.DirectionalLight(0xffffff);
       light.position.set(20, 50, 60);
       this.scene.add(light);
       this.fbxLoader.load("/static/QTZSB.FBX", (object) => {
-        object.position.set(0,-20,0)
+        this.object = object;
+        object.position.set(0, -20, 0);
         object.scale.multiplyScalar(0.35);
-        console.log(object.children);
+        console.log(object);
 
         // this._ChangeMaterialEmissive(object);
-        this.scene.add(axes);
+        // this.scene.add(axes);
         this.scene.add(object);
         var axis = new THREE.Vector3(1, 0, 0); //向量axis
-        object.children[1].rotateOnWorldAxis(axis, 3*Math.PI /2); //绕axis轴旋转π/8
-        object.children[4].rotateOnWorldAxis(axis, 3*Math.PI /2); //绕axis轴旋转π/8
-        object.children[1].translateY(-25); 
-        object.children[4].translateY(-25); 
-        object.children[1].translateZ(-25); 
-        object.children[4].translateZ(-25);
+        // object.children[1].rotateOnWorldAxis(axis, (3 * Math.PI) / 2); //绕axis轴旋转π/8
+        // object.children[4].rotateOnWorldAxis(axis, (3 * Math.PI) / 2); //绕axis轴旋转π/8
+        // object.children[1].translateY(-25);
+        // object.children[4].translateY(-25);
+        // object.children[1].translateZ(-25);
+        // object.children[4].translateZ(-25);
+        // object.children[11].translateOnAxis(new THREE.Vector3(1, 0, 0),58)
         setInterval(() => {
           //   console.log("删除组件");
           var axis = new THREE.Vector3(1, 0, 0); //向量axis
@@ -63,7 +69,7 @@ export default {
           // object.children[10].rotateOnWorldAxis (axis, Math.PI / 8); //绕axis轴旋转π/8
           // object.children[11].rotateOnWorldAxis (axis, Math.PI / 8); //绕axis轴旋转π/8
           // object.children[8].rotateOnWorldAxis (axis, Math.PI / 8); //绕axis轴旋转π/8
-          object.rotateY(Math.PI / 8);
+          // object.rotateY(Math.PI / 8);
         }, 260);
         // var mesh = new THREE.Mesh(object.children[11].geometry, material);
         // mesh.scale.set(0.4, 0.4, 0.4);
@@ -122,8 +128,22 @@ export default {
     // 动画
     animate() {
       requestAnimationFrame(this.animate);
-      //   this.mesh.rotation.x += 0.01;
-      //   this.mesh.rotation.y += 0.02;
+      // this.mesh.rotation.x += 0.01;
+      // this.mesh.rotation.y += 0.02;
+      this.angle += 0.05;
+      // 圆周运动网格模型x坐标计算  绕转半径400
+      var x = 20 * Math.sin(this.angle) + 20;
+      // 圆周运动网格模型y坐标计算  绕转半径400
+      var y = 20 * Math.cos(this.angle) + 40;
+      // 每次执行render函数，更新需要做圆周运动网格模型Mesh的位置属性
+      // this.mesh.position.set(x, 3, z);
+      setTimeout(() => {
+        // this.object.children[1].position.set(60, y, 0);
+        // this.object.children[4].position.set(60, y, 0);
+        // this.object.children[1].rotation.x += 0.01;
+        // this.object.children[4].rotation.x += 0.01;
+        this.object.rotation.y += 0.01;
+      }, 1000);
       this.renderer.render(this.scene, this.camera);
     },
   },
